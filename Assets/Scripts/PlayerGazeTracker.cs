@@ -10,6 +10,8 @@ using UnityEngine.SceneManagement;
 
 public class PlayerGazeTracker : MonoBehaviour
 {
+    // i added this variable so you can store the default look time somewhere since the looktimeleft will change throughout the script
+    public float DefaultLookTime = 3f;
     //The time it takes to look at the sphere so you can move on
     public float lookTimeLeft = 3.0f; 
     public LayerMask ignoreMe;
@@ -30,6 +32,7 @@ public class PlayerGazeTracker : MonoBehaviour
             //Second, check if look time == 0
             if (lookTimeLeft <= 0)
             {
+
                 //If it is 0 we will load a new scene
 
                 switch (sceneNumber)
@@ -49,6 +52,13 @@ public class PlayerGazeTracker : MonoBehaviour
 
                 //Increases the scene number by 1 each time you switch
                 sceneNumber++;
+
+                //override for the starterscene
+                if (hit.transform.tag == "Balloon")
+                {
+                    SceneManager.LoadScene(1);
+                    Debug.Log("balloon");
+                }
             }
 
 
@@ -57,6 +67,10 @@ public class PlayerGazeTracker : MonoBehaviour
         else lookTimeLeft = 3f;
     }
     
+
+
+
+
     //physical representation of the line
     void OnDrawGizmosSelected()
     {
