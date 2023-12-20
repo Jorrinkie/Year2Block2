@@ -66,7 +66,7 @@ public class NoiseMovement : MonoBehaviour
         }
         vals /= 128.0f;
         Debug.Log(vals);
-        if (vals > .1f)
+        if (vals > .009f)
         {
             rb.MovePosition(transform.position + cameraForward * vals * speedMultiplier * Time.deltaTime);
         }
