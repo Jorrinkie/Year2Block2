@@ -2,10 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//Was working on this episode https://youtu.be/QBGWVvpu-jo?si=ZV5k6hwDsuRo8P5F&t=754 but it seems lods are not working 
 public class EndlessTerrain : MonoBehaviour
 {
-    const float scale = 1f;
+   
     const float viewerThresholdForChunkUpdate = 25f;
     //We square it because it is quicker this way to get the distance then using the sqr root operator 
     const float sqrviewerThresholdForChunkUpdate = viewerThresholdForChunkUpdate * viewerThresholdForChunkUpdate;
@@ -41,7 +40,7 @@ public class EndlessTerrain : MonoBehaviour
 
     private void Update()
     {
-        viewerPos = new Vector2(viewer.position.x, viewer.position.z) / scale;
+        viewerPos = new Vector2(viewer.position.x, viewer.position.z) / mapGenerator.terrainData.uniformScale;
 
         if ((viewerPosOld - viewerPos).sqrMagnitude > sqrviewerThresholdForChunkUpdate)
         {
@@ -116,9 +115,9 @@ public class EndlessTerrain : MonoBehaviour
             meshCollider = meshObject.AddComponent<MeshCollider>();
             meshRenderer.material = material;
            
-            meshObject.transform.position = positionV3 * scale;
+            meshObject.transform.position = positionV3 * mapGenerator.terrainData.uniformScale;
             meshObject.transform.parent = parent;
-            meshObject.transform.localScale = Vector3.one * scale;
+            meshObject.transform.localScale = Vector3.one * mapGenerator.terrainData.uniformScale;
             
             SetVisible(false);
 
