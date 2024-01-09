@@ -18,7 +18,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Concept 2.unity
     guid: 001bd0b04019d7646bff7cf9bffa8432
   - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
+    path: Assets/Scenes/BoatLevel.unity
     guid: 99c9720ab356a0642a771bea13969a05
   m_configObjects:
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 7857eb89080861f46aa444d2cc8a0d44,
