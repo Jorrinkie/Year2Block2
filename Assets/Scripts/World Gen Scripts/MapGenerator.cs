@@ -7,29 +7,24 @@ using System.Threading;
 
 public class MapGenerator : MonoBehaviour
 {
-    public enum DrawMode { NoiseMap, ColorMap, Mesh, FallOffMap}
+    public enum DrawMode { NoiseMap, Mesh, FallOffMap}
     public DrawMode drawMode;
 
     public TerrainData terrainData;
     public NoiseData noiseData;
+    public TextureData textureData;
+
+    public Material terrainMaterial;
 
     [Range(0,6)]
     public int editorPreviewLoD;
 
     public bool autoUpdate;
 
-    public TerrainType[] regions;
-    static MapGenerator instance;
-
     float[,] fallOffMap;
 
     Queue<MapThreatInfo<MapData>> mapDataThreadInfoQueue = new Queue<MapThreatInfo<MapData>>();
     Queue<MapThreatInfo<MeshData>> meshDataThreadInfoQueue = new Queue<MapThreatInfo<MeshData>>();
-
-    private void Awake()
-    {
-        fallOffMap = FallOffGenerator.GenerateFallOffMap(mapChunkSize);
-    }
 
     void OnValuesUpdated()
     {
@@ -38,19 +33,19 @@ public class MapGenerator : MonoBehaviour
             DrawMapInEditor();
         }
     }
-    public static int mapChunkSize
+
+    void OnTextureValuesUpdated()
+    {
+        textureData.ApplyToMaterial(terrainMaterial);
+    }
+    public int mapChunkSize
     {
         //Dont forget the actual size is +1 so the actual dimensions are 240x240 
         //Even though over here it is 239 we add two when generating and subtract 1 somewhere else
         //Because flatshading creates a ton of extra vertices and there is a max amount of vertices for a single mesh in unity it is reduced from 239 to 95
         get
         {
-            if (instance == null)
-            {
-                instance = FindObjectOfType<MapGenerator>();
-            }
-
-            if (instance.terrainData.useFlatShading)
+            if (terrainData.useFlatShading)
             {
                 return 95;
             }
@@ -68,10 +63,8 @@ public class MapGenerator : MonoBehaviour
         MapDisplay display = FindObjectOfType<MapDisplay>();
         if (drawMode == DrawMode.NoiseMap)
             display.DrawTexture(TextureGenerator.TextureFromHeightMap(mapData.heightMap));
-        else if (drawMode == DrawMode.ColorMap)
-            display.DrawTexture(TextureGenerator.TextureFromColorMap(mapData.colorMap, mapChunkSize, mapChunkSize));
         else if (drawMode == DrawMode.Mesh)
-            display.DrawMesh(MeshGenerator1.GenerateTerrainMesh(mapData.heightMap, terrainData.meshHeightMultiplier, terrainData.meshHeightCurve, editorPreviewLoD, terrainData.useFlatShading), TextureGenerator.TextureFromColorMap(mapData.colorMap, mapChunkSize, mapChunkSize));
+            display.DrawMesh(MeshGenerator1.GenerateTerrainMesh(mapData.heightMap, terrainData.meshHeightMultiplier, terrainData.meshHeightCurve, editorPreviewLoD, terrainData.useFlatShading));
         else if (drawMode == DrawMode.FallOffMap)
             display.DrawTexture(TextureGenerator.TextureFromHeightMap(FallOffGenerator.GenerateFallOffMap(mapChunkSize)));
     }
@@ -144,67 +137,57 @@ public class MapGenerator : MonoBehaviour
     {
         float [,] noiseMap = Noise.GenerateNoiseMap(mapChunkSize +2, mapChunkSize +2, noiseData.seed, noiseData.noiseScale, noiseData.octaves, noiseData.persistance, noiseData.lacunarity, centre + noiseData.offset, noiseData.normalizeMode);
 
-        Color[] colorMap = new Color[mapChunkSize * mapChunkSize];
-        for (int y=0; y<mapChunkSize; y++)
+        if (terrainData.useFallOff)
         {
-            for (int x=0; x<mapChunkSize; x++)
+            if (fallOffMap == null)
+                fallOffMap = FallOffGenerator.GenerateFallOffMap(mapChunkSize + 2);
+        }
+       
+        for (int y=0; y<mapChunkSize+2; y++)
+        {
+            for (int x=0; x<mapChunkSize+2; x++)
             {
                 if (terrainData.useFallOff)
                 {
                     noiseMap[x,y] = Mathf.Clamp01(noiseMap[x,y] - fallOffMap[x,y]);
                 }
 
-                float currentHeight = noiseMap[x,y];
-                for (int i =0; i<regions.Length; i++)
-                {
-                    if (currentHeight >= regions[i].height)
-                    {
-                        //If this is true we found the region we need to affect
-                        //Now we want to save the color for this region
-                        colorMap[y* mapChunkSize + x] = regions[i].color;
-                    }
-                    else
-                    {
-                        //Then we break because we don't need to check the other regions for the one we are looking for
-                        break;
-                    }
-                }
+                
             }
         }
 
-        return new MapData(noiseMap, colorMap);
+        textureData.UpdateMeshHeight(terrainMaterial, terrainData.minHeight, terrainData.maxHeight);
+        Debug.Log("MinHeight " + terrainData.minHeight);
+        Debug.Log("MaxHeight " + terrainData.maxHeight);
 
+
+        return new MapData(noiseMap);
     }
 
-    //Used to clamp these variables to 1 and 0 respectivly otherwise things break
-    //Gets activated only when they get changed 
+    
     private void OnValidate()
     {
         if(terrainData != null)
         {
-            //To prevent subscribing multiple times to value update event we first unsubscribe with the -= and then subscribe again
-            //If we aren't subscribed yet the -= does nothing 
+            //To prevent multiple subscribers we first remove all subscribers which only does something if there are already subscribers 
             terrainData.OnValuesUpdated -= OnValuesUpdated;
             terrainData.OnValuesUpdated += OnValuesUpdated; 
         }
 
-        if(noiseData != null)
+        if (noiseData != null)
         {
             noiseData.OnValuesUpdated -= OnValuesUpdated;
             noiseData.OnValuesUpdated += OnValuesUpdated;
         }
 
-        fallOffMap = FallOffGenerator.GenerateFallOffMap(mapChunkSize);
+        if(textureData != null)
+        {
+            textureData.OnValuesUpdated -= OnTextureValuesUpdated;
+            textureData.OnValuesUpdated += OnTextureValuesUpdated;
+        }
     }
 
-    [System.Serializable]
-    public struct TerrainType
-    {
-        public string name;
-        public float height;
-        public Color color;
-
-    }
+    
 
     //I think we create this struct so we can use the "map data" outside of the threat it is running in 
     //The T means that the struct is generic which we do so we can also use it both for the mapdata (eg. heightmap, colormap) and the mesh data 
@@ -226,11 +209,9 @@ public class MapGenerator : MonoBehaviour
 public struct MapData
 {
     public readonly float[,] heightMap;
-    public readonly Color[] colorMap;
-
-    public MapData(float[,] heightMap, Color[] colorMap)
+   
+    public MapData(float[,] heightMap)
     {
         this.heightMap = heightMap;
-        this.colorMap = colorMap;
     }
 }
