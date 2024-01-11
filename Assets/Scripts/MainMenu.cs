@@ -15,7 +15,6 @@ public class MainMenu : MonoBehaviour
     //The time it takes to look at the sphere so you can move on
     [SerializeField] float lookTimeLeft = 3.0f;
     [SerializeField] LayerMask ignoreMe;
-    [SerializeField] int sceneNumber;
 
 
 
@@ -23,7 +22,7 @@ public class MainMenu : MonoBehaviour
     void Update()
     {
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.forward, out hit, 150, ignoreMe))
+        if (Physics.Raycast(transform.position, transform.forward, out hit, 900, ignoreMe))
 
         {
             //First, decrease the look time by 1 every second
@@ -35,14 +34,14 @@ public class MainMenu : MonoBehaviour
                 
                 if (hit.transform.tag == "BalloonLevel")
                 {
-                    SceneManager.LoadScene(3);
+                    SceneManager.LoadScene(1);
                     Debug.Log("balloon level loaded");
                 }
 
                 if (hit.transform.tag == "BoatLevel")
                 {
-                    SceneManager.LoadScene(1);
-                    Debug.Log("balloon level loaded");
+                    SceneManager.LoadScene(3);
+                    Debug.Log("boat level loaded");
                 }
             }
 

@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 
@@ -14,6 +16,8 @@ public class NoiseMovement : MonoBehaviour
     private Rigidbody rb;
     // Block for the Output Data  (audioSource.GetOutputData)()
     public static float[] samples = new float[128];
+    [SerializeField] bool run = false;
+    [SerializeField] bool isrunning = false;
 
 
     void Start()
@@ -68,8 +72,35 @@ public class NoiseMovement : MonoBehaviour
         Debug.Log(vals);
         if (vals > .007f)
         {
-            rb.MovePosition(transform.position + cameraForward * vals * speedMultiplier * Time.deltaTime);
+            if (isrunning == false) { StartCoroutine(Move()); }
+            else
+            {
+                StopCoroutine(Move());
+                StartCoroutine(Move());
+            }
         }
+
+        if (run)
+        {
+            run = false;
+            //WHY NOT FORCE AAA
+            //rb.MovePosition(transform.position + cameraForward * 1 * speedMultiplier * Time.deltaTime);
+
+            rb.AddForce(cameraForward * vals * speedMultiplier * Time.deltaTime);
+            
+        }
+
     }
 
+    IEnumerator Move()
+    {
+        isrunning = true;
+        for (int i = 0; i < 30; i++)
+        {
+            yield return new WaitForSeconds(.1f);
+            run = true;
+        }
+        isrunning = false;
+
+    }
 }
