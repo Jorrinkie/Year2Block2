@@ -269,7 +269,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 1.55, z: 0}
   m_LocalScale: {x: 0.20000002, y: 0.39999998, z: 0.12}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1509276044}
   m_Father: {fileID: 1279211231}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &672537449
@@ -708,12 +709,12 @@ Transform:
   m_GameObject: {fileID: 1509276043}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 25.147, z: -0.06600001}
-  m_LocalScale: {x: 0.6000001, y: 0.59999996, z: 0.6}
+  m_LocalPosition: {x: 0, y: -0.13000013, z: -0.11000001}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1455101484}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 651778366}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1509276045
 MonoBehaviour:
@@ -1061,6 +1062,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boat: {fileID: 1988834960}
+  turnspeed: 50
 --- !u!114 &1988834967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1213,4 +1215,3 @@ SceneRoots:
   - {fileID: 766390137}
   - {fileID: 3212436799248178086}
   - {fileID: 672537449}
-  - {fileID: 1509276044}
