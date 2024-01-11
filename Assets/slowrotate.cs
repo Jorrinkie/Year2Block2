@@ -9,10 +9,10 @@ public class slowrotate : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+ 
     void Update()
     {
         if (Camera.main.transform.rotation.y > transform.rotation.y + 0.2)
@@ -26,4 +26,9 @@ public class slowrotate : MonoBehaviour
 
         Debug.Log(Camera.main.transform.rotation.y + "  " + transform.rotation.y);
     }
+
+
+
+
+ 
 }

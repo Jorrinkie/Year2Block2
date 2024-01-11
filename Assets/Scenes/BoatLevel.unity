@@ -1075,7 +1075,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a66c78214c38f445ac7265bd1170b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speedMultiplier: 0
+  speedMultiplier: 100000
   selectedDevice: 
   run: 0
   isrunning: 0
