@@ -69,7 +69,7 @@ public class NoiseMovement : MonoBehaviour
             vals += Mathf.Abs(samples[i]);
         }
         vals /= 128.0f;
-        Debug.Log(vals);
+        //Debug.Log(vals);
         if (vals > .007f)
         {
             if (isrunning == false) { StartCoroutine(Move()); }
