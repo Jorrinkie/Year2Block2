@@ -8,6 +8,7 @@ TagManager:
   - BalloonLevel
   - BoatLevel
   - Checkpoint
+  - Falling Tree
   layers:
   - Default
   - TransparentFX

@@ -15,6 +15,9 @@ public class MainMenu : MonoBehaviour
     //The time it takes to look at the sphere so you can move on
     [SerializeField] float lookTimeLeft = 3.0f;
     [SerializeField] LayerMask ignoreMe;
+    [SerializeField] private GameObject Tree;
+    [SerializeField] private Animator CastleAnim;
+  
 
 
 
@@ -42,6 +45,27 @@ public class MainMenu : MonoBehaviour
                 {
                     SceneManager.LoadScene(3);
                     Debug.Log("boat level loaded");
+                }
+            }
+
+            if (hit.transform.tag == "Falling Tree")
+            {
+                Debug.Log("TREE");
+
+                if (Tree != null)
+                {
+                    EventManager.current.Treelook();
+                    
+                }
+            }
+
+            if (hit.transform.tag == "Castle Gate")
+            {
+                Debug.Log("Gate");
+
+                if (CastleAnim != null)
+                {
+                    CastleAnim.SetTrigger("GO");
                 }
             }
 
