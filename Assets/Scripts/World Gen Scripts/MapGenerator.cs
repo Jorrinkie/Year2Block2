@@ -21,6 +21,9 @@ public class MapGenerator : MonoBehaviour
     public TerrainType[] regions;
     static MapGenerator instance;
 
+    public List<Vector3> spawnPoints = new List<Vector3>();
+    public int maxSpawnPointsPerChunk = 20; 
+
     float[,] fallOffMap;
 
     Queue<MapThreatInfo<MapData>> mapDataThreadInfoQueue = new Queue<MapThreatInfo<MapData>>();
@@ -153,8 +156,13 @@ public class MapGenerator : MonoBehaviour
                 {
                     noiseMap[x,y] = Mathf.Clamp01(noiseMap[x,y] - fallOffMap[x,y]);
                 }
-
-                float currentHeight = noiseMap[x,y];
+                float currentHeight = noiseMap[x, y];
+                for (int z=0; z<maxSpawnPointsPerChunk; z++)
+                {
+                    Vector3 spawnPoint = new Vector3(x, currentHeight, y);
+                   
+                }
+                
                 for (int i =0; i<regions.Length; i++)
                 {
                     if (currentHeight >= regions[i].height)
@@ -162,6 +170,8 @@ public class MapGenerator : MonoBehaviour
                         //If this is true we found the region we need to affect
                         //Now we want to save the color for this region
                         colorMap[y* mapChunkSize + x] = regions[i].color;
+
+                       
                     }
                     else
                     {
@@ -172,7 +182,9 @@ public class MapGenerator : MonoBehaviour
             }
         }
 
+       
         return new MapData(noiseMap, colorMap);
+        
 
     }
 
@@ -204,6 +216,8 @@ public class MapGenerator : MonoBehaviour
         public float height;
         public Color color;
 
+        //Building Gen
+        public GameObject[] prefabs;
     }
 
     //I think we create this struct so we can use the "map data" outside of the threat it is running in 

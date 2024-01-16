@@ -4,6 +4,8 @@ using UnityEngine;
 
 public static class MeshGenerator1 
 {
+    public delegate void TerrainMeshGeneratedEvent();
+    public static event TerrainMeshGeneratedEvent OnTerrainMeshGenerated;
     public static MeshData GenerateTerrainMesh(float[,] heightMap, float heightMultiplier, AnimationCurve _heightCurve, int levelOfDetail, bool useFlatShading)
     {
         AnimationCurve heightCurve = new AnimationCurve (_heightCurve.keys);
@@ -84,6 +86,10 @@ public static class MeshGenerator1
 
         //We bake the normals over here so that it is done on a seperate thread for better performance
         meshData.ProcessMesh();
+
+        //Building Generation 
+        if (OnTerrainMeshGenerated != null)
+            OnTerrainMeshGenerated.Invoke();
 
         return meshData;
     }

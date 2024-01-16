@@ -1,10 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EndlessTerrain : MonoBehaviour
 {
-   
     const float viewerThresholdForChunkUpdate = 25f;
     //We square it because it is quicker this way to get the distance then using the sqr root operator 
     const float sqrviewerThresholdForChunkUpdate = viewerThresholdForChunkUpdate * viewerThresholdForChunkUpdate;
@@ -47,7 +50,6 @@ public class EndlessTerrain : MonoBehaviour
             viewerPosOld = viewerPos;
             UpdateVisibleChunks();
         }
-
     }
 
     void UpdateVisibleChunks()
@@ -72,9 +74,6 @@ public class EndlessTerrain : MonoBehaviour
                 if (terrainChunkDictionary.ContainsKey(viewedChunkCoord))
                 {
                     terrainChunkDictionary[viewedChunkCoord].UpdateTerrainChunk();
-                    
-                    
-                    
                 }
                 else
                 {
@@ -87,8 +86,9 @@ public class EndlessTerrain : MonoBehaviour
     public class TerrainChunk
     {
         GameObject meshObject;
-        Vector2 position;
+        public Vector2 position;
         Bounds bounds;
+        
 
         MeshRenderer meshRenderer;
         MeshFilter meshFilter;
@@ -101,24 +101,34 @@ public class EndlessTerrain : MonoBehaviour
         MapData mapData;
         bool mapDataReceived;
         int previousLoDIndex = -1;
+
+        
+        Node[,] nodes;
+        public float cellSize = 10;
         public TerrainChunk(Vector2 coord, int size, LODInfo[] detailLevels, Transform parent, Material material)
         {
             this.detailLevels = detailLevels;
 
+
             position = coord * size;
             bounds = new Bounds(position, Vector2.one * size);
             Vector3 positionV3 = new Vector3(position.x, 0, position.y);
+            int terrainLayer = LayerMask.NameToLayer("TerrainChunk");
 
+            
             meshObject = new GameObject("Terrain Chunk");
+            
+
             meshRenderer = meshObject.AddComponent<MeshRenderer>();
             meshFilter = meshObject.AddComponent<MeshFilter>();
             meshCollider = meshObject.AddComponent<MeshCollider>();
             meshRenderer.material = material;
+            meshObject.layer = terrainLayer;
            
             meshObject.transform.position = positionV3 * mapGenerator.terrainData.uniformScale;
             meshObject.transform.parent = parent;
             meshObject.transform.localScale = Vector3.one * mapGenerator.terrainData.uniformScale;
-            
+
             SetVisible(false);
 
             lodMeshes = new LODMesh[detailLevels.Length];
@@ -148,7 +158,6 @@ public class EndlessTerrain : MonoBehaviour
         void OnMeshDataReceived(MeshData meshData)
         {
             meshFilter.mesh = meshData.CreateMesh();
-
         }
 
         public void UpdateTerrainChunk()
@@ -200,14 +209,18 @@ public class EndlessTerrain : MonoBehaviour
                         }
                     }
 
+                   
+
                     //Updates the list with all the visible chunks 
                     terrainChunksVisibleLastUpdate.Add(this); 
                 }
 
                 SetVisible(visible);
+                
+                
             }
         }
-
+        
         public void SetVisible(bool visible)
         {
             meshObject.SetActive(visible);
@@ -216,6 +229,22 @@ public class EndlessTerrain : MonoBehaviour
         public bool isVisible()
         {
             return meshObject.activeSelf;
+        }
+
+        public void CreateGrid()
+        {
+            nodes = new Node[MapGenerator.mapChunkSize, MapGenerator.mapChunkSize];
+            //int name = 0;
+
+            for (int i = 0; i < MapGenerator.mapChunkSize; i++)
+            {
+                for (int j = 0; j < MapGenerator.mapChunkSize; j++)
+                {
+                    Vector3 worldPos = new Vector3(i, 0, j);
+                    nodes[i, j] = new Node(true, worldPos);
+                    Debug.Log(nodes[i, j]);
+                }
+            }
         }
     }
 
@@ -227,6 +256,7 @@ public class EndlessTerrain : MonoBehaviour
         public bool hasMesh;
         int lod;
         System.Action updateCallback;
+        TerrainChunk terrainChunk;
 
         public LODMesh(int lod, System.Action updateCallback)
         {
@@ -244,7 +274,7 @@ public class EndlessTerrain : MonoBehaviour
         {
             hasRequestedMesh = true;
             mapGenerator.RequestMeshData(mapData, lod, OnMeshDataReceived);
-
+            terrainChunk.CreateGrid();
         }
     }
 
@@ -256,3 +286,4 @@ public class EndlessTerrain : MonoBehaviour
         public bool useForCollider;
     }
 }
+
