@@ -11,14 +11,14 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Concept1 Balloon.unity
     guid: f78e5ec1f50d05e4c923bf3e9325f23c
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Concept 1 Boat.unity
     guid: cc7a57b7a79508547b96792d210b947f
   - enabled: 1
     path: Assets/Scenes/Concept 2.unity
     guid: 001bd0b04019d7646bff7cf9bffa8432
-  - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
+  - enabled: 1
+    path: Assets/Scenes/BoatLevel.unity
     guid: 99c9720ab356a0642a771bea13969a05
   m_configObjects:
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 7857eb89080861f46aa444d2cc8a0d44,

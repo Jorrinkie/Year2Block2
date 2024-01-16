@@ -5,7 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - Balloon
-  - TerrainChunk
+  - BalloonLevel
+  - BoatLevel
+  - Checkpoint
+  - Falling Tree
   layers:
   - Default
   - TransparentFX
@@ -14,7 +17,7 @@ TagManager:
   - Water
   - UI
   - Interact
-  - TerrainChunk
+  - 
   - 
   - 
   - 
