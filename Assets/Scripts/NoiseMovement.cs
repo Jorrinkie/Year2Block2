@@ -19,6 +19,8 @@ public class NoiseMovement : MonoBehaviour
     [SerializeField] bool run = false;
     [SerializeField] bool isrunning = false;
 
+    [SerializeField, Range(0.001f, 0.010f)] float minSound;
+
 
     void Start()
     {
@@ -35,7 +37,8 @@ public class NoiseMovement : MonoBehaviour
             //While the position of the mic in the recording is greater than 0, play the clip (the mic)
             while (!(Microphone.GetPosition(selectedDevice) > 0))
             {
-                audioSource.Play();
+                //bad line that makes you hear yourself
+               // audioSource.Play();
             }
         }
     }
@@ -70,7 +73,8 @@ public class NoiseMovement : MonoBehaviour
         }
         vals /= 128.0f;
         //Debug.Log(vals);
-        if (vals > .007f)
+        if (vals > .007)
+            //old val .007
         {
             if (isrunning == false) { StartCoroutine(Move()); }
             else
@@ -95,7 +99,7 @@ public class NoiseMovement : MonoBehaviour
     IEnumerator Move()
     {
         isrunning = true;
-        for (int i = 0; i < 30; i++)
+        for (int i = 0; i < 50; i++)
         {
             yield return new WaitForSeconds(.1f);
             run = true;
