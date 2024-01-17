@@ -9,7 +9,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: gate_raises
+    m_ConditionEvent: go
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1629079426391887214}
@@ -34,7 +34,7 @@ AnimatorController:
   m_Name: Gate (metal)
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: gate_raises
+  - m_Name: go
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0

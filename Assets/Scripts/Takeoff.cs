@@ -7,23 +7,15 @@ public class Takeoff : MonoBehaviour
     public float lateralSpeed = 1.0f;
     public float lateralRange = 3.0f;
 
-    private bool isTakingOff = false;
+    public bool isTakingOff = false;
     private bool isDescending = false; // Flag for descent
-    private float totalDistance = 20.0f;
+    private float totalDistance = 120.0f;
     private float currentDistance = 0.0f;
     private float currentLateralOffset = 0.0f;
     private float currentSpeed = 1.0f;
 
     private float descentDistance = 3.0f; // Distance to descend
     private bool isDescendingUp = false; // Flag for moving up during descent
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            isTakingOff = true;
-        }
-    }
 
     private void Update()
     {

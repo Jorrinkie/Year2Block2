@@ -85,7 +85,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 3d3ea2e39dcc76a42a3781ba64f60b61, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -131,7 +131,7 @@ Cloth:
   m_UseTethers: 1
   m_UseGravity: 1
   m_Damping: 0
-  m_ExternalAcceleration: {x: 0, y: 0, z: 0}
+  m_ExternalAcceleration: {x: 15, y: 0, z: 0}
   m_RandomAcceleration: {x: 0, y: 0, z: 0}
   m_WorldVelocityScale: 0.5
   m_WorldAccelerationScale: 1
@@ -405,17 +405,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: cb56e929577987243afba8bd3f35c6af,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -116.3554
+      value: -175.28723
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cb56e929577987243afba8bd3f35c6af,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -7.75
+      value: -151.4
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cb56e929577987243afba8bd3f35c6af,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -6.4641523
+      value: 202.8089
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cb56e929577987243afba8bd3f35c6af,
         type: 3}
@@ -455,7 +455,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: cb56e929577987243afba8bd3f35c6af,
         type: 3}
       propertyPath: m_Name
-      value: New Prefab 1
+      value: flag(cloth)
       objectReference: {fileID: 0}
     - target: {fileID: 8898056158814839061, guid: cb56e929577987243afba8bd3f35c6af,
         type: 3}

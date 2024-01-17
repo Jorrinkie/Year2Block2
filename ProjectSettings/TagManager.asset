@@ -9,11 +9,12 @@ TagManager:
   - BoatLevel
   - Checkpoint
   - Falling Tree
+  - TakeOff
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Events
   - Water
   - UI
   - Interact
