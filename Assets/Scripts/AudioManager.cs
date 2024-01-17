@@ -11,12 +11,28 @@ public class AudioManager : MonoBehaviour
     public AudioClip MusicBWF;
     public AudioClip MusicMinimalistic;
 
+    [Header("----------------Settings---------------")]
+    [SerializeField] bool playMusicMinimalistic = true; // Set to false if you want to play MusicBWF instead
+    [SerializeField] bool playNoMusic = false; // Set to true if you don't want any music
+
     private void Start()
     {
-        // Set up music loop
-        musicSource.clip = MusicMinimalistic;
-        musicSource.loop = true;
-        musicSource.Play();
+        // Check if no music is selected
+        if (!playNoMusic)
+        {
+            // Set up music loop based on the boolean variable
+            if (playMusicMinimalistic)
+            {
+                musicSource.clip = MusicMinimalistic;
+            }
+            else
+            {
+                musicSource.clip = MusicBWF;
+            }
+
+            musicSource.loop = true;
+            musicSource.Play();
+        }
 
         // Set up SFX loop
         SFXSource.clip = FireSFX;
