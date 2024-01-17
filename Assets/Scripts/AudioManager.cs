@@ -13,10 +13,14 @@ public class AudioManager : MonoBehaviour
 
     private void Start()
     {
-        musicSource.clip = MusicMinimalistic; // Set the first music clip
-        musicSource.Play(); // Play the first music clip
+        // Set up music loop
+        musicSource.clip = MusicMinimalistic;
+        musicSource.loop = true;
+        musicSource.Play();
 
-        SFXSource.clip = FireSFX; // Set the SFX clip
-        SFXSource.Play(); // Play the SFX clip
+        // Set up SFX loop
+        SFXSource.clip = FireSFX;
+        SFXSource.loop = true;
+        SFXSource.Play();
     }
 }
