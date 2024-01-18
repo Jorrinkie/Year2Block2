@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Sources;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -10,7 +11,7 @@ public class NoiseMovement : MonoBehaviour
 {
     AudioSource audioSource;
     public float speedMultiplier;
-
+    [SerializeField] private float storedvals;
     //default Mic
     public string selectedDevice;
     private Rigidbody rb;
@@ -24,6 +25,8 @@ public class NoiseMovement : MonoBehaviour
 
     void Start()
     {
+        
+
         audioSource = GetComponent<AudioSource>();
         rb = GetComponent<Rigidbody>();
         //look for microphones, it selects the default microphone, it sets the audioSource.clip to the default mic, loops it for 1 second at the sampleRate
@@ -38,7 +41,7 @@ public class NoiseMovement : MonoBehaviour
             while (!(Microphone.GetPosition(selectedDevice) > 0))
             {
                 //bad line that makes you hear yourself
-               // audioSource.Play();
+               audioSource.Play();
             }
         }
     }
@@ -72,15 +75,20 @@ public class NoiseMovement : MonoBehaviour
             vals += Mathf.Abs(samples[i]);
         }
         vals /= 128.0f;
-        //Debug.Log(vals);
-        if (vals > .007)
+       // Debug.Log(vals);
+        if (vals > minSound)
             //old val .007
         {
             if (isrunning == false) { StartCoroutine(Move()); }
             else
             {
+                
                 StopCoroutine(Move());
                 StartCoroutine(Move());
+            }
+            if (run != true)
+            {
+                storedvals = vals;
             }
         }
 
@@ -90,7 +98,7 @@ public class NoiseMovement : MonoBehaviour
             //WHY NOT FORCE AAA
             //rb.MovePosition(transform.position + cameraForward * 1 * speedMultiplier * Time.deltaTime);
 
-            rb.AddForce(cameraForward * vals * speedMultiplier * Time.deltaTime);
+            rb.AddForce(cameraForward * storedvals * speedMultiplier * Time.deltaTime);
             
         }
 
@@ -98,10 +106,11 @@ public class NoiseMovement : MonoBehaviour
 
     IEnumerator Move()
     {
+        
         isrunning = true;
-        for (int i = 0; i < 50; i++)
+        for (int i = 0; i < 70; i++)
         {
-            yield return new WaitForSeconds(.1f);
+            yield return new WaitForSeconds(.2f);
             run = true;
         }
         isrunning = false;

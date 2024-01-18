@@ -17,9 +17,9 @@ public class Event_Trigger : MonoBehaviour
         RaycastHit hit;
 
         // Raycast from the camera to detect objects on the specified layer
-        if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, Mathf.Infinity, prefabLayer))
+        if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, 190, prefabLayer))
         {
-            Debug.Log(hit.ToString());
+         //   Debug.Log(hit.ToString());
             GameObject newHitPrefab = hit.collider.gameObject;
 
             if (newHitPrefab != lastHitPrefab)
