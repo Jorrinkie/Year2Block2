@@ -11,6 +11,7 @@ TagManager:
   - Falling Tree
   - TakeOff
   - Selectable
+  - CheckpointSystem
   layers:
   - Default
   - TransparentFX
