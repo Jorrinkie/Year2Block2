@@ -9,17 +9,18 @@ TagManager:
   - BoatLevel
   - Checkpoint
   - Falling Tree
-  - CheckpointSystem
+  - TakeOff
+  - Selectable
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Events
   - Water
   - UI
   - Interact
-  - TerrainChunk
-  - 
+  - post processing
+  - duck
   - 
   - 
   - 

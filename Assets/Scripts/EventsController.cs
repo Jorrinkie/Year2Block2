@@ -18,6 +18,7 @@ public class EventsController : MonoBehaviour
        if (Tree != null)
         {
             Tree.gameObject.GetComponent<Rigidbody>().drag = 0;
+            
         }
     }
 }

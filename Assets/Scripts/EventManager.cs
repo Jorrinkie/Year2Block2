@@ -19,4 +19,11 @@ public class EventManager : MonoBehaviour
     {
         Ontreelook?.Invoke();
     }
+
+    public event Action OnCastleLook;
+    
+    public void CastleLook()
+    {
+        Ontreelook?.Invoke();
+    }
 }
