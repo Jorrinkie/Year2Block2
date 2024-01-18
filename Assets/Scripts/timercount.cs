@@ -9,6 +9,7 @@ public class timercount : MonoBehaviour
     [SerializeField] Animator animator;
     [SerializeField] float RoundedNumber;
     [SerializeField] PlayerGazeTracker tracker;
+
     // Update is called once per frame
     void Update()
     {

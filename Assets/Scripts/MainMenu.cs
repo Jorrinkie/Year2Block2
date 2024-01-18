@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 
 //Use physics.raycast to check if the player is looking at the object, CHECK
@@ -17,6 +18,11 @@ public class MainMenu : MonoBehaviour
     [SerializeField] LayerMask ignoreMe;
     [SerializeField] private GameObject Tree;
     [SerializeField] private Animator CastleAnim;
+    public int TimerLook;
+    [SerializeField] TMP_Text text;
+    [SerializeField] TMP_Text text2;
+    [SerializeField] private float RoundedNumber;
+
   
 
 
@@ -24,6 +30,13 @@ public class MainMenu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (text != null)
+        {
+            RoundedNumber = Mathf.Round(lookTimeLeft);
+            text.SetText(RoundedNumber.ToString());
+            text2.SetText(RoundedNumber.ToString());
+        }
+        
         RaycastHit hit;
         if (Physics.Raycast(transform.position, transform.forward, out hit, 900, ignoreMe))
 
