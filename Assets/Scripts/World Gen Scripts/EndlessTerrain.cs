@@ -1,10 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Runtime.CompilerServices;
 using Unity.Mathematics;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
+using static EndlessTerrain;
 
 public class EndlessTerrain : MonoBehaviour
 {
@@ -21,13 +24,13 @@ public class EndlessTerrain : MonoBehaviour
     public static Vector2 viewerPos;
     Vector2 viewerPosOld;
     static MapGenerator mapGenerator;
-    int chunkSize;
+    public int chunkSize;
     int chunksVisibleInViewDist;
 
     //Used to keep track of existing chunks
-    Dictionary<Vector2, TerrainChunk> terrainChunkDictionary = new Dictionary<Vector2, TerrainChunk> ();
+    public Dictionary<Vector2, TerrainChunk> terrainChunkDictionary = new Dictionary<Vector2, TerrainChunk> ();
     //This list will be used to disable chunks
-    static List<TerrainChunk> terrainChunksVisibleLastUpdate = new List<TerrainChunk> ();
+    public static List<TerrainChunk> terrainChunksVisibleLastUpdate = new List<TerrainChunk> ();
 
     private void Start()
     {
@@ -88,7 +91,6 @@ public class EndlessTerrain : MonoBehaviour
         GameObject meshObject;
         public Vector2 position;
         Bounds bounds;
-        
 
         MeshRenderer meshRenderer;
         MeshFilter meshFilter;
@@ -102,9 +104,8 @@ public class EndlessTerrain : MonoBehaviour
         bool mapDataReceived;
         int previousLoDIndex = -1;
 
-        
-        Node[,] nodes;
-        public float cellSize = 10;
+        List<GameObject> spawnedPrefabs = new List<GameObject> ();
+
         public TerrainChunk(Vector2 coord, int size, LODInfo[] detailLevels, Transform parent, Material material)
         {
             this.detailLevels = detailLevels;
@@ -167,6 +168,8 @@ public class EndlessTerrain : MonoBehaviour
                 float viewerDistFromNearestEdge = Mathf.Sqrt(bounds.SqrDistance(viewerPos));
                 bool visible = viewerDistFromNearestEdge <= maxViewDist;
 
+                
+
                 if (visible)
                 {
                     int lodIndex = 0;
@@ -202,6 +205,7 @@ public class EndlessTerrain : MonoBehaviour
                         if (collisionLoDMesh.hasMesh)
                         {
                             meshCollider.sharedMesh = collisionLoDMesh.mesh;
+                            //SpawnPrefabBasedOnColormap();
                         }
                         else if (!collisionLoDMesh.hasRequestedMesh)
                         {
@@ -209,18 +213,15 @@ public class EndlessTerrain : MonoBehaviour
                         }
                     }
 
-                   
-
                     //Updates the list with all the visible chunks 
                     terrainChunksVisibleLastUpdate.Add(this); 
                 }
 
                 SetVisible(visible);
-                
-                
             }
         }
         
+      
         public void SetVisible(bool visible)
         {
             meshObject.SetActive(visible);
@@ -231,21 +232,76 @@ public class EndlessTerrain : MonoBehaviour
             return meshObject.activeSelf;
         }
 
-        public void CreateGrid()
+        void SpawnPrefabBasedOnColormap()
         {
-            nodes = new Node[MapGenerator.mapChunkSize, MapGenerator.mapChunkSize];
-            //int name = 0;
+            GameObject treePrefab = mapGenerator.treePrefab;
+            float[,] heightmap = mapData.heightMap;
+            float minTreeSpawn = .4f;
+            float maxTreeSpawn = .55f;
+            float chunkSize = MapGenerator.mapChunkSize - 1;
 
-            for (int i = 0; i < MapGenerator.mapChunkSize; i++)
+            float randomizationFactor = .8f;
+            float maxTreesPerChunk = 60;
+            int treeSpawned = 0;
+
+            for (int x = 0; x < chunkSize; x++)
             {
-                for (int j = 0; j < MapGenerator.mapChunkSize; j++)
+                for (int y = 0; y < chunkSize; y++)
                 {
-                    Vector3 worldPos = new Vector3(i, 0, j);
-                    nodes[i, j] = new Node(true, worldPos);
-                    Debug.Log(nodes[i, j]);
+                    float heightValue = heightmap[x, y];
+                    
+                    if (heightValue >= minTreeSpawn && heightValue <= maxTreeSpawn)
+                    { 
+                        if (UnityEngine.Random.value < randomizationFactor)
+                        {
+                            float randomX = position.x + x + UnityEngine.Random.Range(-50f, 50f);
+                            float randomZ = position.y + y + UnityEngine.Random.Range(-50f, 50f);
+                            Vector3 pixelWorldPosition = new Vector3(randomX, heightValue * mapGenerator.terrainData.uniformScale, randomZ);
+
+                            
+                                Instantiate(treePrefab, pixelWorldPosition, Quaternion.identity);
+                                treeSpawned++;
+                            
+
+                            if (treeSpawned >= maxTreesPerChunk)
+                                return;
+                        }
+                    }
+
                 }
             }
         }
+
+        bool isInCorrectRegion(Vector3 position)
+        {
+            float[,] heightmap = mapData.heightMap;
+            float regionThreshold = 0.5f;
+            int x = Mathf.RoundToInt(position.x / mapGenerator.terrainData.uniformScale);
+            int y = Mathf.RoundToInt(position.z / mapGenerator.terrainData.uniformScale);
+
+            if (x >= 0 && x < heightmap.GetLength(0) && y >= 0 && y < heightmap.GetLength(1))
+            {
+                float regionHeight = heightmap[x, y];
+
+                return regionHeight > regionThreshold;
+            }
+
+            return false;
+        }
+
+        public void AddPrefab(GameObject prefab)
+        {
+            spawnedPrefabs.Add(prefab);
+        }
+
+        public void DeactivatePrefabs()
+        {
+            foreach (var prefab in spawnedPrefabs)
+            {
+                prefab.SetActive(false);
+            }
+        }
+
     }
 
     //This class will be responsible for fetching the correct mesh from the map generator 
@@ -274,7 +330,7 @@ public class EndlessTerrain : MonoBehaviour
         {
             hasRequestedMesh = true;
             mapGenerator.RequestMeshData(mapData, lod, OnMeshDataReceived);
-            terrainChunk.CreateGrid();
+            //terrainChunk.CreateGrid();
         }
     }
 

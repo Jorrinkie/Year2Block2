@@ -4,23 +4,27 @@ using UnityEngine;
 
 public class CheckpointSystem : MonoBehaviour
 {
+    GameObject checkPointManagerObject;
     // List to store the checkpoints
     [SerializeField] int Checkpointcount = 3;
-    private CPCount count;
+    public CPCount count;
     // Counter for the number of checkpoints driven through
     private int checkpointsPassed = 0;
 
 
     private void Start()
     {
-        count = transform.parent.GetComponent<CPCount>();
+        checkPointManagerObject = GameObject.FindGameObjectWithTag("CheckpointSystem");
+        if (checkPointManagerObject != null)
+            count = checkPointManagerObject.GetComponent<CPCount>();
+
     }
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
            count.count++;
-            Debug.Log("Checkpoint passed!" + " " + count.count);
+           //Debug.Log("Checkpoint passed!" + " " + count.count);
            
 
             // Check if all checkpoints have been passed
