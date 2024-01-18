@@ -10,6 +10,7 @@ TagManager:
   - Checkpoint
   - Falling Tree
   - TakeOff
+  - Selectable
   layers:
   - Default
   - TransparentFX
