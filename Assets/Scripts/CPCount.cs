@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CPCount : MonoBehaviour
@@ -12,6 +13,8 @@ public class CPCount : MonoBehaviour
     private void Start()
     {
         drunkardsWalk = GetComponent<DrunkardsWalk>();
+        if (drunkardsWalk == null)
+            return;
     }
     private void Update()
     {

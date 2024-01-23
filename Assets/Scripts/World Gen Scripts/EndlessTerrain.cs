@@ -124,7 +124,7 @@ public class EndlessTerrain : MonoBehaviour
             meshFilter = meshObject.AddComponent<MeshFilter>();
             meshCollider = meshObject.AddComponent<MeshCollider>();
             meshRenderer.material = material;
-            meshObject.layer = terrainLayer;
+            //meshObject.layer = terrainLayer;
            
             meshObject.transform.position = positionV3 * mapGenerator.terrainData.uniformScale;
             meshObject.transform.parent = parent;
@@ -232,45 +232,45 @@ public class EndlessTerrain : MonoBehaviour
             return meshObject.activeSelf;
         }
 
-        void SpawnPrefabBasedOnColormap()
-        {
-            GameObject treePrefab = mapGenerator.treePrefab;
-            float[,] heightmap = mapData.heightMap;
-            float minTreeSpawn = .4f;
-            float maxTreeSpawn = .55f;
-            float chunkSize = MapGenerator.mapChunkSize - 1;
+        //void SpawnPrefabBasedOnColormap()
+        //{
+        //    GameObject treePrefab = mapGenerator.treePrefab;
+        //    float[,] heightmap = mapData.heightMap;
+        //    float minTreeSpawn = .4f;
+        //    float maxTreeSpawn = .55f;
+        //    float chunkSize = MapGenerator.mapChunkSize - 1;
 
-            float randomizationFactor = .8f;
-            float maxTreesPerChunk = 60;
-            int treeSpawned = 0;
+        //    float randomizationFactor = .8f;
+        //    float maxTreesPerChunk = 60;
+        //    int treeSpawned = 0;
 
-            for (int x = 0; x < chunkSize; x++)
-            {
-                for (int y = 0; y < chunkSize; y++)
-                {
-                    float heightValue = heightmap[x, y];
+        //    for (int x = 0; x < chunkSize; x++)
+        //    {
+        //        for (int y = 0; y < chunkSize; y++)
+        //        {
+        //            float heightValue = heightmap[x, y];
                     
-                    if (heightValue >= minTreeSpawn && heightValue <= maxTreeSpawn)
-                    { 
-                        if (UnityEngine.Random.value < randomizationFactor)
-                        {
-                            float randomX = position.x + x + UnityEngine.Random.Range(-50f, 50f);
-                            float randomZ = position.y + y + UnityEngine.Random.Range(-50f, 50f);
-                            Vector3 pixelWorldPosition = new Vector3(randomX, heightValue * mapGenerator.terrainData.uniformScale, randomZ);
+        //            if (heightValue >= minTreeSpawn && heightValue <= maxTreeSpawn)
+        //            { 
+        //                if (UnityEngine.Random.value < randomizationFactor)
+        //                {
+        //                    float randomX = position.x + x + UnityEngine.Random.Range(-50f, 50f);
+        //                    float randomZ = position.y + y + UnityEngine.Random.Range(-50f, 50f);
+        //                    Vector3 pixelWorldPosition = new Vector3(randomX, heightValue * mapGenerator.terrainData.uniformScale, randomZ);
 
                             
-                                Instantiate(treePrefab, pixelWorldPosition, Quaternion.identity);
-                                treeSpawned++;
+        //                        Instantiate(treePrefab, pixelWorldPosition, Quaternion.identity);
+        //                        treeSpawned++;
                             
 
-                            if (treeSpawned >= maxTreesPerChunk)
-                                return;
-                        }
-                    }
+        //                    if (treeSpawned >= maxTreesPerChunk)
+        //                        return;
+        //                }
+        //            }
 
-                }
-            }
-        }
+        //        }
+        //    }
+        //}
 
         bool isInCorrectRegion(Vector3 position)
         {

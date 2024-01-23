@@ -10,8 +10,6 @@ public class MapGenerator : MonoBehaviour
     public enum DrawMode { NoiseMap, ColorMap, Mesh, FallOffMap}
     public DrawMode drawMode;
 
-    public GameObject treePrefab;
-
     public TerrainData terrainData;
     public NoiseData noiseData;
 
