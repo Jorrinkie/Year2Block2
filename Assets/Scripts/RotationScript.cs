@@ -24,7 +24,7 @@ public class RotationScript : MonoBehaviour
 
         float dotpro = Vector3.Dot(playerForward, PlayerToBoat);
 
-        Debug.Log("dotpro gives = " + dotpro);
+        //Debug.Log("dotpro gives = " + dotpro);
         dotpro = dotpro / 2;
 
         if (dotpro > 0.2 && dotpro < 0.8)
