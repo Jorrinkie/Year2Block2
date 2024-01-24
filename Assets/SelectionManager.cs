@@ -24,6 +24,7 @@ public class SelectionManager : MonoBehaviour
             var selection = hit.transform;
             if (selection.CompareTag(selectableLayer))
             {
+                
                 var selectionRenderer = selection.GetComponent<Renderer>();
                 if (selectionRenderer != null)
                 {
